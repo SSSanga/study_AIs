@@ -4,7 +4,7 @@ texture = float(input('texture_worst: '))
 smoothness = float(input('smoothness_worst: '))
 concavity = float(input('concavity_worst: '))
 
-with open ('datasets/BreastCancerWisconsin_Regression_quest.pkl', 'rb') as logistic :
+with open ('datasets/BreastCancerWisconsin_Logistic_quest.pkl', 'rb') as logistic :
     loaded_model = pickle.load(logistic)
     input_features = [[texture, smoothness, concavity]]
     result_predict = loaded_model.predict(input_features)
