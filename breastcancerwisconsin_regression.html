@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <title>Breast Cancer Prediction</title>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Breast Cancer Prediction</h1>
+
+        <!-- Form -->
+        <form id="predictionForm" class="mt-4">
+            <!-- Texture Mean Input -->
+            <div class="mb-3">
+                <label for="textureMeanInput" class="form-label">Texture Mean:</label>
+                <input type="text" class="form-control" id="textureMeanInput" name="texture_mean" required>
+            </div>
+            <!-- Perimeter Mean Input -->
+            <div class="mb-3">
+                <label for="perimeterMeanInput" class="form-label">Perimeter Mean:</label>
+                <input type="text" class="form-control" id="perimeterMeanInput" name="perimeter_mean" required>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" id="predict">Predict</button>
+        </form>
+
+        <!-- Result Display -->
+        <div id="resultDisplay" class="mt-4"></div>
+        <!-- reference : https://github.com/yojulab/study_javascripts/blob/main/docs/browser_js/js/carinforwithrest.js -->
+        <!-- 여기에 결과값이 나와야함. 아래script에 적용시켜야함.  -->
+    </div>
+</body>
+<script>
+// 이벤트를 건다. 
+// id를 불러올때는 #, class를 불러올때는 ., tag를 불러올때는 그대로 사용
+let predictObject = document.querySelector('#predict')
+predictObject.addEventListener('click', (event)=>{
+    event.preventDefault(); // submit 정지
+    // form tag안에 있는거 가져오는 기능
+    let texture_mean = document.querySelector('#textureMeanInput').value;
+    let perimeter_mean = document.querySelector('#perimeterMeanInput').value;
+
+    // request를 dictionary로 담아서 보낸다
+    let request_dict = {"texture_mean":texture_mean, "perimeter_mean":perimeter_mean}
+
+    // console.log(`request_dict : ${request_dict}`);
+    // backend에 request던지고 return dictionary 
+    // fetch_
+    fetch('http://127.0.0.1:8000/api_v1/mlmodelwithregression', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json'
+     },
+     body: JSON.stringify(request_dict)
+   })
+   .then(response => response.json())
+   .then(data => {
+        console.log(data)
+     // Display the result in the resultDisplay div
+     document.querySelector('#resultDisplay').innerHTML = `Radius Mean : ${data.radius_mean}`; // 목표변수를 여기에 써준다. 
+   })
+   .catch(error => console.error(error));
+
+});
+</script>
+</html>
